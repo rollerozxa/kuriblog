@@ -5,19 +5,18 @@ require('lib/common.php');
 $error = '';
 
 if (isset($_GET['logout'])) {
-	setcookie('login');
+	setcookie('token');
 	die(header('Location: index.php'));
 } elseif (isset($_POST['login'])) {
 	if (!$_POST['username'] or !$_POST['password'])
 		$error = 'Please enter an user name and a password.';
 	else {
-		$password = hash('sha256', $_POST['password'].PASS_SALT);
-		$user = SqlQueryResult("SELECT id FROM users WHERE name='".SqlEscape($_POST['username'])."' AND password='{$password}'");
-		if (!$user)
+		$logindata = SqlQueryResult("SELECT id,password,token FROM users WHERE name = '".SqlEscape($_POST['username']).'"');
+
+		if (!password_verify($_POST['password'], $logindata['password']))
 			$error = 'Invalid user name or password.';
 		else {
-			$loginstr = hash('sha256', $user.'|'.$password.'|'.PASS_SALT);
-			setcookie('login', base64_encode($user.'|'.$loginstr), time()+999999);
+			setcookie('token', $logindata['token'], time()+999999);
 			die(header('Location: index.php'));
 		}
 	}

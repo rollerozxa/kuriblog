@@ -55,7 +55,8 @@ INSERT INTO `themes` (`id`, `filename`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
-  `password` varchar(64) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
   `powerlevel` tinyint(4) NOT NULL DEFAULT '0',
   `sex` tinyint(3) unsigned NOT NULL,
   `regdate` int(10) unsigned NOT NULL,

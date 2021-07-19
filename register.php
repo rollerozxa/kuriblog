@@ -23,18 +23,19 @@ if (isset($_POST['register'])) {
 			$error = 'Another user is using the same IP address as yours.';
 		else {
 			$username = SqlEscape($username);
-			$password = hash('sha256', $_POST['pass1'].PASS_SALT);
+			$password = password_hash($_POST['pass1'], PASSWORD_DEFAULT);
 			$sex = (int)$_POST['sex'];
 			if (($sex < 0) || ($sex > 2)) $sex = 2;
 
 			$power = 0;
 			if (SqlQueryResult("SELECT COUNT(*) FROM users") == 0) $power = 3;
 
-			SqlQuery("INSERT INTO users (name,password,powerlevel,sex,regdate,ip) VALUES ('{$username}', '{$password}', {$power}, {$sex}, UNIX_TIMESTAMP(), '".SqlEscape($_SERVER['REMOTE_ADDR'])."')");
+			$token = bin2hex(random_bytes(32));
+
+			SqlQuery("INSERT INTO users (name,password,powerlevel,sex,regdate,ip,token) VALUES ('{$username}', '{$password}', {$power}, {$sex}, UNIX_TIMESTAMP(), '".SqlEscape($_SERVER['REMOTE_ADDR'])."', '{$token}')");
 			$user = SqlInsertId();
 
-			$loginstr = hash('sha256', $user.'|'.$password.'|'.PASS_SALT);
-			setcookie('login', base64_encode($user.'|'.$loginstr), time()+999999);
+			setcookie('token', $token, time()+999999);
 			die(header('Location: index.php'));
 		}
 	}

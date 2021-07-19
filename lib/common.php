@@ -43,25 +43,17 @@ $myusername = 'Guest';
 $mypower = 0;
 $myuserdata = NULL;
 
-if ($loginstr = $_COOKIE['login']) {
-	$logindata = explode('|', base64_decode($loginstr));
-	$myuserid = (int)$logindata[0];
-
-	$myuserdata = SqlQueryFetchRow("SELECT * FROM users WHERE id={$myuserid}");
-	if ($myuserdata) {
-		$stuff = hash('sha256', $myuserid.'|'.$myuserdata['password'].'|'.PASS_SALT);
-		if ($stuff != $logindata[1])
-			$myuserdata = NULL;
-	}
+if (isset($_COOKIE['token']) && $token = $_COOKIE['token']) {
+	$myuserdata = SqlQueryFetchRow("SELECT * FROM users WHERE token='".SqlEscape($token)."'");
 
 	if (!$myuserdata) {
-		setcookie('login');
+		setcookie('token');
 		$myuserid = 0;
 	} else {
 		$login = true;
 		$myusername = $myuserdata['name'];
 		$mypower = $myuserdata['powerlevel'];
-		$mytoken = sha1($stuff);
+		$mytoken = sha1('wtf is this');
 
 		SqlQuery("UPDATE users SET ip='".SqlEscape($_SERVER['REMOTE_ADDR'])."' WHERE id={$myuserid}");
 	}
@@ -69,7 +61,6 @@ if ($loginstr = $_COOKIE['login']) {
 
 if (!$myuserdata)
 	$myuserdata = array('name' => 'Guest', 'theme' => 1, 'token' => 'lol');
-
 
 function QueryString($exclude) {
 	if (!is_array($exclude))
