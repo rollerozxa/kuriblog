@@ -5,7 +5,7 @@ BuildHeader(array('descr' => META_DESCR));
 
 $epp = 10;
 $numentries = SqlQueryResult("SELECT COUNT(*) FROM blog_entries");
-if ($_GET['eid']) {
+if (isset($_GET['eid'])) {
 	$eid = (int)$_GET['eid'];
 	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_entries WHERE id>={$eid}");
 	$_GET['p'] = ceil($numonpage / $epp);

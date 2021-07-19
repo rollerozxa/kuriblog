@@ -116,10 +116,10 @@ function BuildHeader($params = 0) {
 	$descr = '';
 
 	if (is_array($params)) {
-		if ($params['title'])
+		if (isset($params['title']))
 			$title = $params['title'].' | '.$title;
 
-		if ($params['descr'])
+		if (isset($params['descr']))
 			$descr = "\t<meta name=\"description\" content=\"".htmlspecialchars($params['descr'])."\">\n";
 	}
 
@@ -202,7 +202,10 @@ function Username($data, $pf = '') {
 }
 
 function PageNum() {
-	return max((int)$_GET['p'], 1);
+	if (isset($_GET['p']))
+		return max((int)$_GET['p'], 1);
+	else
+		return 1;
 }
 
 function PageLinks($num, $pp = 20) {

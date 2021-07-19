@@ -11,7 +11,7 @@ if (!$entry)
 	Kill('Invalid blog entry ID.');
 
 $error = '';
-if ($_POST['postcomment']) {
+if (isset($_POST['postcomment'])) {
 	if (!$login) {
 		if (!GUESTCOMMENTS)
 			$error = 'You must be logged in to post comments.';
@@ -91,7 +91,7 @@ $cpp = 20;
 $ncomments = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid}");
 if (isset($_GET['last']))
 	$_GET['p'] = ceil($ncomments / $cpp);
-else if ($_GET['cid']) {
+else if (isset($_GET['cid'])) {
 	$cid = (int)$_GET['cid'];
 	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid} AND id<={$cid}");
 	$_GET['p'] = ceil($numonpage / $cpp);

@@ -3,11 +3,7 @@
 header('Content-type: application/rss+xml');
 require('lib/common.php');
 
-$port = $_SERVER['SERVER_PORT'];
-if ($port != ($_SERVER['HTTPS']?443:80)) $port = ':'.$port;
-else $port = '';
-
-$siteurl = 'http'.($_SERVER['HTTPS']?'s':'').'://'.$_SERVER['SERVER_NAME'].$port.preg_replace('{/[^/]*$}', '', $_SERVER['SCRIPT_NAME']);
+$siteurl = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['SERVER_NAME'].preg_replace('{/[^/]*$}', '', $_SERVER['SCRIPT_NAME']);
 
 print '<?xml version="1.0" encoding="UTF-8"?>';
 

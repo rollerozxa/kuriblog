@@ -23,7 +23,7 @@ else $action = 'Edit profile';
 
 $key = hash('sha256', "{$myuserdata['id']},{$myuserdata['password']},blahblah");
 $error = '';
-if ($_POST['savechanges']) {
+if (isset($_POST['savechanges'])) {
 	if ($_POST['key'] != $key)
 		die('No.');
 
@@ -109,9 +109,9 @@ $themelist .= '</select>';
 			<tr>
 				<td class="c1 center bold">Sex:</td>
 				<td class="c2 left">
-					<label><input type="radio" name="sex" value=1 <?php if ($_POST['sex']==1) print 'checked="checked" '; ?>/> Male</label>
-					<label><input type="radio" name="sex" value=2 <?php if ($_POST['sex']==2) print 'checked="checked" '; ?>/> Female</label>
-					<label><input type="radio" name="sex" value=0 <?php if ($_POST['sex']==0) print 'checked="checked" '; ?>/> N/A</label>
+					<label><input type="radio" name="sex" value=1 <?php if ($_POST['sex']==1) print 'selected '; ?>/> Male</label>
+					<label><input type="radio" name="sex" value=2 <?php if ($_POST['sex']==2) print 'selected '; ?>/> Female</label>
+					<label><input type="radio" name="sex" value=0 <?php if ($_POST['sex']==0) print 'selected '; ?>/> N/A</label>
 				</td>
 			</tr>
 
@@ -139,11 +139,11 @@ $themelist .= '</select>';
 				<td class="c1 center bold">Rank:</td>
 				<td class="c2 left">
 					<select name="rank">
-						<option value="-1"<?php echo ($_POST['powerlevel'] == -1 ? ' selected="selected"':''); ?>>Banned</option>
-						<option value="0"<?php echo ($_POST['powerlevel'] == 0 ? ' selected="selected"':''); ?>>Normal user</option>
-						<option value="1"<?php echo ($_POST['powerlevel'] == 1 ? ' selected="selected"':''); ?>>Comments moderator</option>
-						<option value="2"<?php echo ($_POST['powerlevel'] == 2 ? ' selected="selected"':''); ?>>Blog poster</option>
-						<option value="3"<?php echo ($_POST['powerlevel'] == 3 ? ' selected="selected"':''); ?>>Admin</option>
+						<option value="-1"<?php echo ($_POST['powerlevel'] == -1 ? ' selected':''); ?>>Banned</option>
+						<option value="0"<?php echo ($_POST['powerlevel'] == 0 ? ' selected':''); ?>>Normal user</option>
+						<option value="1"<?php echo ($_POST['powerlevel'] == 1 ? ' selected':''); ?>>Comments moderator</option>
+						<option value="2"<?php echo ($_POST['powerlevel'] == 2 ? ' selected':''); ?>>Blog poster</option>
+						<option value="3"<?php echo ($_POST['powerlevel'] == 3 ? ' selected':''); ?>>Admin</option>
 					</select>
 				</td>
 			</tr>

@@ -2,7 +2,7 @@
 require('lib/common.php');
 
 $error = '';
-if ($_POST['register']) {
+if (isset($_POST['register'])) {
 	$username = trim($_POST['name']);
 
 	if ($username == '')
@@ -48,6 +48,8 @@ print $crumbs;
 if ($error)
 	MsgError($error);
 
+$sex = (isset($_POST['sex']) ? $_POST['sex'] : 43);
+
 ?>
 	<form action="register.php" method="post">
 		<table class="ptable">
@@ -56,7 +58,7 @@ if ($error)
 			</tr>
 			<tr>
 				<td class="c1 center bold" style="width: 150px;">(*) User name:</td>
-				<td class="c2 left"><input type="text" name="name" size=20 maxlength=20 value="<?php echo htmlspecialchars($_POST['name']); ?>"></td>
+				<td class="c2 left"><input type="text" name="name" size=20 maxlength=20 value="<?=(isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '') ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">(*) Password:</td>
@@ -72,9 +74,9 @@ if ($error)
 			<tr>
 				<td class="c1 center bold">Sex:</td>
 				<td class="c2 left">
-					<label><input type="radio" name="sex" value=1 <?php echo ($_POST['sex'] == 1) ? ' checked="checked"' : ''; ?>> Male</label>
-					<label><input type="radio" name="sex" value=2 <?php echo ($_POST['sex'] == 2) ? ' checked="checked"' : ''; ?>> Female</label>
-					<label><input type="radio" name="sex" value=0 <?php echo ($_POST['sex'] == 0) ? ' checked="checked"' : ''; ?>> N/A</label>
+					<label><input type="radio" name="sex" value=1 <?=($sex == 1) ? ' checked="checked"' : '' ?>> Male</label>
+					<label><input type="radio" name="sex" value=2 <?=($sex == 2) ? ' checked="checked"' : '' ?>> Female</label>
+					<label><input type="radio" name="sex" value=0 <?=($sex == 0) ? ' checked="checked"' : '' ?>> N/A</label>
 				</td>
 			</tr>
 			<tr>

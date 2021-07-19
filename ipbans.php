@@ -1,7 +1,7 @@
 <?php
 require('lib/admincommon.php');
 
-if ($_POST['add']) {
+if (isset($_POST['add'])) {
 	$ip = SqlEscape($_POST['ip']);
 	$reason = SqlEscape($_POST['reason']);
 
@@ -9,7 +9,7 @@ if ($_POST['add']) {
 		SqlQuery("INSERT INTO ipbans (ip,reason) VALUES ('{$ip}','{$reason}')");
 
 	die(header('Location: ipbans.php'));
-} else if ($_POST['remove']) {
+} else if (isset($_POST['remove'])) {
 	$ip = SqlEscape($_POST['ip']);
 	SqlQuery("DELETE FROM ipbans WHERE ip='{$ip}'");
 

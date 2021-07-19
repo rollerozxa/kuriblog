@@ -4,10 +4,12 @@ require('lib/common.php');
 $id = (int)$_GET['id'];
 $new = ($id == 0);
 
+$action = (isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : ''));
+
 if ($new) {
 	$action = 'post';
 	$actioncap = 'New';
-} elseif ($_GET['action'] == 'delete') {
+} elseif ($action == 'delete') {
 	if ($_GET['token'] !== $mytoken) Kill('No.');
 	$action = 'delete';
 	$actioncap = 'Delete';
@@ -34,11 +36,11 @@ if (!$new) {
 
 $error = '';
 
-if ($_GET['action'] == 'delete') {
+if ($action == 'delete') {
 	SqlQuery("DELETE FROM blog_entries WHERE id={$id}");
 	SqlQuery("DELETE FROM blog_comments WHERE entryid={$id}");
 	die(header('Location: index.php'));
-} elseif ($_POST['submit']) {
+} elseif (isset($_POST['submit']) && $_POST['submit']) {
 	$title = trim(SqlEscape($_POST['title']));
 	$text = trim(SqlEscape($_POST['text']));
 

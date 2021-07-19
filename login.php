@@ -7,7 +7,7 @@ $error = '';
 if (isset($_GET['logout'])) {
 	setcookie('login');
 	die(header('Location: index.php'));
-} elseif ($_POST['login']) {
+} elseif (isset($_POST['login'])) {
 	if (!$_POST['username'] or !$_POST['password'])
 		$error = 'Please enter an user name and a password.';
 	else {
@@ -39,7 +39,7 @@ if ($error)
 			</tr>
 			<tr>
 				<td class="c1 center bold" style="width: 150px;">User name:</td>
-				<td class="c2 left"><input type="text" name="username" size=20 maxlength=20 value="<?php echo htmlspecialchars($_POST['username']); ?>"></td>
+				<td class="c2 left"><input type="text" name="username" size=20 maxlength=20 value="<?=(isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '') ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Password:</td>

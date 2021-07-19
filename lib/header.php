@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="theme/<?php print $themefile; ?>" type="text/css">
 	<link rel="alternate" type="application/rss+xml" title="RSS feed" href="rss.php">
 	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<?php print $params['headextra']; ?>
+<?=isset($params['headextra']) ? $params['headextra'] : '' ?>
 </head>
 <body>
 <div class="maincontainer">

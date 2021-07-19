@@ -19,7 +19,7 @@ function SqlQuery($query) {
 		print "<br>";
 	} else {
 		$nqueries++;
-		$nrowst += (int)$res->num_rows;
+		$nrowst += @$res->num_rows;
 	}
 
 	return $res;
