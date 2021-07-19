@@ -1,5 +1,4 @@
 <?php
-
 require('lib/common.php');
 
 $entryid = (int)$_GET['id'];
@@ -12,10 +11,8 @@ if (!$entry)
 	Kill('Invalid blog entry ID.');
 
 $error = '';
-if ($_POST['postcomment'])
-{
-	if (!$login)
-	{
+if ($_POST['postcomment']) {
+	if (!$login) {
 		if (!GUESTCOMMENTS)
 			$error = 'You must be logged in to post comments.';
 		else if (!trim($_POST['name']))
@@ -24,12 +21,10 @@ if ($_POST['postcomment'])
 			$error = 'This name is already taken by a registered user.';
 	}
 
-	if (!$error)
-	{
+	if (!$error) {
 		if ($mypower < 0)
 			$error = 'Nice try, kid, but no. You\'re still banned!';
-		else
-		{
+		else {
 			if ($mypower >= 3)
 				$lastcomments = 0;
 			else
@@ -39,8 +34,7 @@ if ($_POST['postcomment'])
 				$error = 'You posted enough comments for today. Come back tomorrow.';
 			else if (trim($_POST['text']) == '')
 				$error = 'Your comment is empty. Enter some text and try again.';
-			else
-			{
+			else {
 				$text = SqlEscape($_POST['text']);
 				$date = time();
 
@@ -69,8 +63,7 @@ print $crumbs;
 	$timestamp = DateTime($entry['date']);
 
 	$adminopts = '';
-	if (($mypower >= 3) || (($mypower >= 2) && ($entry['userid'] == $myuserid)))
-	{
+	if (($mypower >= 3) || (($mypower >= 2) && ($entry['userid'] == $myuserid))) {
 		$adminopts .= "<a href=\"editblogentry.php?id={$entry['id']}\">Edit</a>";
 		$adminopts .= " | <a href=\"editblogentry.php?action=delete&amp;id={$entry['id']}&amp;token={$mytoken}\"
 			onclick=\"if (!confirm('Really delete this blog entry?')) return false;\">Delete</a>";
@@ -98,8 +91,7 @@ $cpp = 20;
 $ncomments = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid}");
 if (isset($_GET['last']))
 	$_GET['p'] = ceil($ncomments / $cpp);
-else if ($_GET['cid'])
-{
+else if ($_GET['cid']) {
 	$cid = (int)$_GET['cid'];
 	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid} AND id<={$cid}");
 	$_GET['p'] = ceil($numonpage / $cpp);
@@ -123,8 +115,7 @@ print "\t<table class=\"ptable\"><tr><td class=\"c1 left\">{$ncmtstr}</td></tr><
 
 print "\t".PageLinks($ncomments, $cpp);
 
-while ($comment = SqlFetchRow($comments))
-{
+while ($comment = SqlFetchRow($comments)) {
 	if ($comment['userid'])
 		$userlink = UserName($comment, 'u');
 	else
@@ -134,8 +125,7 @@ while ($comment = SqlFetchRow($comments))
 	$timestamp = DateTime($comment['date']);
 
 	$adminopts = '';
-	if ($mypower >= 1 || ($login && $comment['userid'] == $myuserid))
-	{
+	if ($mypower >= 1 || ($login && $comment['userid'] == $myuserid)) {
 		$adminopts .= "<a href=\"editcomment.php?id={$comment['id']}\">Edit</a>";
 		$adminopts .= " | <a href=\"editcomment.php?action=delete&amp;id={$comment['id']}&amp;token={$mytoken}\"
 				onclick=\"if (!confirm('Really delete this comment?')) return false;\">Delete</a>";
@@ -163,12 +153,10 @@ while ($comment = SqlFetchRow($comments))
 
 print "\t".PageLinks($ncomments, $cpp);
 
-if ($login || GUESTCOMMENTS)
-{
+if ($login || GUESTCOMMENTS) {
 	if ($mypower < 0)
 		print "\t<table class=\"ptable\"><tr><td class=\"c1 left\">Banned users may not post comments.</td></tr></table>\n";
-	else
-	{
+	else {
 		if ($error)
 			MsgError($error);
 ?>
@@ -199,5 +187,3 @@ else
 print $crumbs;
 
 BuildFooter();
-
-?>

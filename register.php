@@ -1,10 +1,8 @@
 <?php
-
 require('lib/common.php');
 
 $error = '';
-if ($_POST['register'])
-{
+if ($_POST['register']) {
 	$username = trim($_POST['name']);
 
 	if ($username == '')
@@ -15,8 +13,7 @@ if ($_POST['register'])
 		$error = 'The passwords you entered don\'t match.';
 	elseif (strlen($_POST['pass1']) < 6)
 		$error = 'The password you entered is too short to be secure. It should be atleast 6 characters.';
-	else
-	{
+	else {
 		$unmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE name='".SqlEscape($username)."'");
 		$ipmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE ip='".SqlEscape($_SERVER['REMOTE_ADDR'])."'");
 
@@ -24,8 +21,7 @@ if ($_POST['register'])
 			$error = 'This username is already taken, please choose another.';
 		elseif ($ipmatches)
 			$error = 'Another user is using the same IP address as yours.';
-		else
-		{
+		else {
 			$username = SqlEscape($username);
 			$password = hash('sha256', $_POST['pass1'].PASS_SALT);
 			$sex = (int)$_POST['sex'];
@@ -98,5 +94,3 @@ if ($error)
 print $crumbs;
 
 BuildFooter();
-
-?>

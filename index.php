@@ -1,13 +1,11 @@
 <?php
-
 require('lib/common.php');
 
 BuildHeader(array('descr' => META_DESCR));
 
 $epp = 10;
 $numentries = SqlQueryResult("SELECT COUNT(*) FROM blog_entries");
-if ($_GET['eid'])
-{
+if ($_GET['eid']) {
 	$eid = (int)$_GET['eid'];
 	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_entries WHERE id>={$eid}");
 	$_GET['p'] = ceil($numonpage / $epp);
@@ -23,20 +21,17 @@ $entries = SqlQuery("	SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerle
 
 if (!$numentries)
 	Message('No blog entries posted.');
-else
-{
+else {
 	print "\t".PageLinks($numentries, $epp);
 
-	while ($entry = SqlFetchRow($entries))
-	{
+	while ($entry = SqlFetchRow($entries)) {
 		$title = htmlspecialchars($entry['title']);
 		$userlink = UserName($entry, 'u');
 		$text = Filter_BlogEntry($entry['text']);
 		$timestamp = DateTime($entry['date']);
 
 		$adminopts = '';
-		if (($mypower >= 3) || (($mypower >= 2) && ($entry['userid'] == $myuserid)))
-		{
+		if (($mypower >= 3) || (($mypower >= 2) && ($entry['userid'] == $myuserid))) {
 			$adminopts .= "<a href=\"editblogentry.php?id={$entry['id']}\">Edit</a>";
 			$adminopts .= " | <a href=\"editblogentry.php?action=delete&amp;id={$entry['id']}&amp;token={$mytoken}\"
 				onclick=\"if (!confirm('Really delete this blog entry?')) return false;\">Delete</a>";
@@ -86,5 +81,3 @@ else
 }
 
 BuildFooter();
-
-?>

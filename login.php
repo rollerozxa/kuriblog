@@ -4,23 +4,18 @@ require('lib/common.php');
 
 $error = '';
 
-if (isset($_GET['logout']))
-{
+if (isset($_GET['logout'])) {
 	setcookie('login');
 	die(header('Location: index.php'));
-}
-elseif ($_POST['login'])
-{
+} elseif ($_POST['login']) {
 	if (!$_POST['username'] or !$_POST['password'])
 		$error = 'Please enter an user name and a password.';
-	else
-	{
+	else {
 		$password = hash('sha256', $_POST['password'].PASS_SALT);
 		$user = SqlQueryResult("SELECT id FROM users WHERE name='".SqlEscape($_POST['username'])."' AND password='{$password}'");
 		if (!$user)
 			$error = 'Invalid user name or password.';
-		else
-		{
+		else {
 			$loginstr = hash('sha256', $user.'|'.$password.'|'.PASS_SALT);
 			setcookie('login', base64_encode($user.'|'.$loginstr), time()+999999);
 			die(header('Location: index.php'));
@@ -64,5 +59,3 @@ if ($error)
 print $crumbs;
 
 BuildFooter();
-
-?>

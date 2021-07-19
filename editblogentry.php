@@ -1,23 +1,17 @@
 <?php
-
 require('lib/common.php');
 
 $id = (int)$_GET['id'];
 $new = ($id == 0);
 
-if ($new)
-{
+if ($new) {
 	$action = 'post';
 	$actioncap = 'New';
-}
-elseif ($_GET['action'] == 'delete')
-{
+} elseif ($_GET['action'] == 'delete') {
 	if ($_GET['token'] !== $mytoken) Kill('No.');
 	$action = 'delete';
 	$actioncap = 'Delete';
-}
-else
-{
+} else {
 	$action = 'edit';
 	$actioncap = 'Edit';
 }
@@ -28,28 +22,23 @@ if (!$login)
 if ($mypower < 2)
 	Kill('You aren\'t allowed to '.$action.' blog entries.');
 
-if (!$new)
-{
+if (!$new) {
 	$entry = SqlQueryFetchRow("SELECT * FROM blog_entries WHERE id={$id}");
 	if (!$entry)
 		Kill('Invalid blog entry ID.');
 
 	if (($mypower < 3) && ($entry['userid'] != $myuserid))
 		Kill('You aren\'t allowed to '.$action.' this blog entry.');
-}
-else
+} else
 	$entry = array('userid' => $myuserid, 'title' => '', 'text' => '');
 
 $error = '';
 
-if ($_GET['action'] == 'delete')
-{
+if ($_GET['action'] == 'delete') {
 	SqlQuery("DELETE FROM blog_entries WHERE id={$id}");
 	SqlQuery("DELETE FROM blog_comments WHERE entryid={$id}");
 	die(header('Location: index.php'));
-}
-elseif ($_POST['submit'])
-{
+} elseif ($_POST['submit']) {
 	$title = trim(SqlEscape($_POST['title']));
 	$text = trim(SqlEscape($_POST['text']));
 
@@ -57,8 +46,7 @@ elseif ($_POST['submit'])
 		$error = 'Your blog entry has no title. Enter a title and try again.';
 	elseif ($text == '')
 		$error = 'Your blog entry is empty. Enter some text and try again.';
-	else
-	{
+	else {
 		if ($new)
 			SqlQuery("INSERT INTO blog_entries (userid, title, text, date) VALUES ({$myuserid}, '{$title}', '{$text}', UNIX_TIMESTAMP())");
 		else
@@ -66,9 +54,7 @@ elseif ($_POST['submit'])
 
 		die(header('Location: index.php'));
 	}
-}
-else
-{
+} else {
 	$_POST['title'] = $entry['title'];
 	$_POST['text'] = $entry['text'];
 }
@@ -101,5 +87,3 @@ if ($error)
 <?php
 
 BuildFooter();
-
-?>

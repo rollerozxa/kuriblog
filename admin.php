@@ -1,9 +1,7 @@
 <?php
-
 require('lib/admincommon.php');
 
-if ($_POST['apply'])
-{
+if ($_POST['apply']) {
 	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['sitetitle'])."' WHERE field='sitename'");
 	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['metadescr'])."' WHERE field='metadescr'");
 	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['metakeywords'])."' WHERE field='metakeywords'");
@@ -51,5 +49,3 @@ BuildAdminBar('admin');
 <?php
 
 BuildFooter();
-
-?>

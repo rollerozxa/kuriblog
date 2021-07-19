@@ -1,9 +1,7 @@
 <?php
-
 require('lib/admincommon.php');
 
-if ($_POST['add'])
-{
+if ($_POST['add']) {
 	$ip = SqlEscape($_POST['ip']);
 	$reason = SqlEscape($_POST['reason']);
 
@@ -11,9 +9,7 @@ if ($_POST['add'])
 		SqlQuery("INSERT INTO ipbans (ip,reason) VALUES ('{$ip}','{$reason}')");
 
 	die(header('Location: ipbans.php'));
-}
-else if ($_POST['remove'])
-{
+} else if ($_POST['remove']) {
 	$ip = SqlEscape($_POST['ip']);
 	SqlQuery("DELETE FROM ipbans WHERE ip='{$ip}'");
 
@@ -33,10 +29,8 @@ BuildAdminBar('ipbans');
 <?php
 
 $ipbans = SqlQuery("SELECT * FROM ipbans");
-if (SqlNumRows($ipbans))
-{
-	while ($ipban = SqlFetchRow($ipbans))
-	{
+if (SqlNumRows($ipbans)) {
+	while ($ipban = SqlFetchRow($ipbans)) {
 		echo "
 		<tr>
 			<td class=\"c1 left\">{$ipban['ip']}</td>
@@ -44,8 +38,7 @@ if (SqlNumRows($ipbans))
 			<td class=\"c1 right\"><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"ip\" value=\"".htmlspecialchars($ipban['ip'])."\"><input type=\"submit\" name=\"remove\" value=\"Remove\"></form></td>
 		</tr>";
 	}
-}
-else
+} else
 	echo "<tr><td class=\"c1\" colspan=\"3\">No IP bans.</td></tr>";
 
 ?>
@@ -75,5 +68,3 @@ else
 <?php
 
 BuildFooter();
-
-?>

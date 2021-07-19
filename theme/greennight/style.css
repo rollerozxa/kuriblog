@@ -1,5 +1,4 @@
-body
-{
+body {
 	font-family: 'Arial', sans-serif;
 	font-size: 10pt;
 	background: black url('greennightbg.png');
@@ -19,16 +18,14 @@ a:hover 	{ color: #FFFFFF; }
 table { border-spacing: 0px; border: 0px; }
 td { padding: 0px; }
 
-table.ptable
-{
+table.ptable {
 	border-collapse: collapse;
 	border: 1px solid #082000;
 	padding: 0px;
 	font-size: 10pt;
 }
 
-table.ptable th
-{
+table.ptable th {
 	background: #041000 url('gradient.png');
 	background-repeat: repeat-x;
 	border: 1px solid #208000;
@@ -36,32 +33,27 @@ table.ptable th
 	font-weight: bold;
 }
 
-table.ptable td
-{
+table.ptable td {
 	border: 1px solid #208000;
 	margin: 0px;
 	padding: 1px;
 }
 
-table.ptable td.c1
-{
+table.ptable td.c1 {
 	background: #041000;
 }
 
-table.ptable td.c2
-{
+table.ptable td.c2 {
 	background: #082000;
 }
 
-input[type='text'], input[type='password'], textarea, select
-{
+input[type='text'], input[type='password'], textarea, select {
 	background: black;
 	color: #efe;
 	border: 1px solid #208000;
 }
 
-input[type='submit'], input[type='button'], button
-{
+input[type='submit'], input[type='button'], button {
 	background: black;
 	color: #efe;
 	border: 2px solid #208000;

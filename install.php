@@ -1,7 +1,5 @@
 <?php
-
-function shake()
-{
+function shake() {
 	$cset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
 	$salt = "";
 	$chct = strlen($cset) - 1;
@@ -10,15 +8,13 @@ function shake()
 	return $salt;
 }
 
-if ($_POST['install'])
-{
+if ($_POST['install']) {
 	$salt = shake();
 
 	$settings = '<?php
 
 define(\'PASS_SALT\', '.var_export($salt, true).');
-
-?>';
+';
 	file_put_contents('lib/settings.php', $settings);
 
 	$sqlparams = '<?php

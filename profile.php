@@ -1,5 +1,4 @@
 <?php
-
 require('lib/common.php');
 
 $id = (int)$_GET['id'];
@@ -55,5 +54,3 @@ print $crumbs;
 print $crumbs;
 
 BuildFooter();
-
-?>

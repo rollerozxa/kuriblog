@@ -1,5 +1,4 @@
-body
-{
+body {
 	text-align: center;
 	margin: 0px;
 	padding: 0px;
@@ -23,22 +22,19 @@ img { border: none!important; }
 .smaller { font-size: 85%; }
 .larger { font-size: 115%; }
 
-div.maincontainer
-{
+div.maincontainer {
 	max-width: 1024px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-table.ptable
-{
+table.ptable {
 	width: 100%;
 	max-width: 100%;
 	margin-bottom: 1em;
 }
 
-table.ptable#pageheader
-{
+table.ptable#pageheader {
 	margin-top: 1em;
 }
 
@@ -54,22 +50,18 @@ form { display: inline; }
 
 /* TODO KILL THIS HACK */
 
-table.topstuck
-{
+table.topstuck {
 	margin-top: -1em !important;
 }
 
-table.topstuck tr:first-child td
-{
+table.topstuck tr:first-child td {
 	border-top: none !important;
 }
 
-table.bottomstuck
-{
+table.bottomstuck {
 	margin-bottom: 0px !important;
 }
 
-table.bottomstuck tr:last-child td
-{
+table.bottomstuck tr:last-child td {
 	border-bottom: none !important;
 }

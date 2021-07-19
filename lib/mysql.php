@@ -10,19 +10,15 @@ $nqueries = 0;
 $nrowsf = 0;
 $nrowst = 0;
 
-function SqlQuery($query)
-{
+function SqlQuery($query) {
 	global $dblink, $nqueries, $nrowst, $sqldebug;
 
 	$res = $dblink->query($query);
-	if (!$res)
-	{
+	if (!$res) {
 		print "<strong>MySQL error</strong>: ".$dblink->error;
 		if ($sqldebug) print " @ ".$query;
 		print "<br>";
-	}
-	else
-	{
+	} else {
 		$nqueries++;
 		$nrowst += (int)$res->num_rows;
 	}
@@ -30,8 +26,7 @@ function SqlQuery($query)
 	return $res;
 }
 
-function SqlFetchRow($res)
-{
+function SqlFetchRow($res) {
 	global $nrowsf;
 
 	if (!$res) return NULL;
@@ -44,13 +39,11 @@ function SqlFetchRow($res)
 	return $ret;
 }
 
-function SqlQueryFetchRow($query)
-{
+function SqlQueryFetchRow($query) {
 	return SqlFetchRow(SqlQuery($query));
 }
 
-function SqlQueryResult($query, $col = 0)
-{
+function SqlQueryResult($query, $col = 0) {
 	global $nrowsf;
 
 	$res = SqlQuery($query);
@@ -63,8 +56,7 @@ function SqlQueryResult($query, $col = 0)
 	return $rasp;
 }
 
-function SqlNumRows($res)
-{
+function SqlNumRows($res) {
 	if (!$res) return 0;
 	return $res->num_rows;
 }
@@ -72,5 +64,3 @@ function SqlNumRows($res)
 function SqlEscape($val) { global $dblink; return $dblink->real_escape_string($val); }
 
 function SqlInsertId() { global $dblink; return $dblink->insert_id; }
-
-?>

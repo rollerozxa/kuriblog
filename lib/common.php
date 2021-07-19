@@ -1,27 +1,8 @@
 <?php
-
 $t = gettimeofday();
 $starttime = $t['sec'] + ($t['usec'] / 1000000);
 
 header('Content-type: text/html; CHARSET=utf-8');
-
-if (ini_get('register_globals'))
-	die('register_globals must die');
-
-if (get_magic_quotes_gpc())
-{
-	function AutoDeslash($val)
-	{
-		if (is_array($val))
-			return array_map('AutoDeslash', $val);
-		else if (is_string($val))
-			return stripslashes($val);
-	}
-
-	$_GET = array_map('AutoDeslash', $_GET);
-	$_POST = array_map('AutoDeslash', $_POST);
-	$_COOKIE = array_map('AutoDeslash', $_COOKIE);
-}
 
 require('mysql.php');
 require('settings.php');
@@ -45,10 +26,8 @@ $bots = array(
 );
 
 $isbot = false;
-foreach ($bots as $bot)
-{
-	if (stristr($_SERVER['HTTP_USER_AGENT'], $bot) !== FALSE)
-	{
+foreach ($bots as $bot) {
+	if (stristr($_SERVER['HTTP_USER_AGENT'], $bot) !== FALSE) {
 		$isbot = true;
 		break;
 	}
@@ -60,26 +39,21 @@ $myusername = 'Guest';
 $mypower = 0;
 $myuserdata = NULL;
 
-if ($loginstr = $_COOKIE['login'])
-{
+if ($loginstr = $_COOKIE['login']) {
 	$logindata = explode('|', base64_decode($loginstr));
 	$myuserid = (int)$logindata[0];
 
 	$myuserdata = SqlQueryFetchRow("SELECT * FROM users WHERE id={$myuserid}");
-	if ($myuserdata)
-	{
+	if ($myuserdata) {
 		$stuff = hash('sha256', $myuserid.'|'.$myuserdata['password'].'|'.PASS_SALT);
 		if ($stuff != $logindata[1])
 			$myuserdata = NULL;
 	}
 
-	if (!$myuserdata)
-	{
+	if (!$myuserdata) {
 		setcookie('login');
 		$myuserid = 0;
-	}
-	else
-	{
+	} else {
 		$login = true;
 		$myusername = $myuserdata['name'];
 		$mypower = $myuserdata['powerlevel'];
@@ -93,15 +67,13 @@ if (!$myuserdata)
 	$myuserdata = array('name' => 'Guest', 'theme' => 1, 'token' => 'lol');
 
 
-function QueryString($exclude)
-{
+function QueryString($exclude) {
 	if (!is_array($exclude))
 		$exclude = array($exclude);
 
 	$ret = '';
 
-	foreach ($_GET as $k => $v)
-	{
+	foreach ($_GET as $k => $v) {
 		if (in_array($k, $exclude))
 			continue;
 
@@ -112,19 +84,15 @@ function QueryString($exclude)
 }
 
 
-function BuildHeader($params = 0)
-{
+function BuildHeader($params = 0) {
 	global $login, $myuserdata, $mypower, $isbot;
 
 	$nviews = (int)SqlQueryResult("SELECT value FROM misc WHERE field='views'");
 	$nbotviews = (int)SqlQueryResult("SELECT value FROM misc WHERE field='botviews'");
-	if (!$isbot)
-	{
+	if (!$isbot) {
 		$nviews++;
 		SqlQuery("UPDATE misc SET value='{$nviews}' WHERE field='views'");
-	}
-	else
-	{
+	} else {
 		$nbotviews++;
 		SqlQuery("UPDATE misc SET value='{$nbotviews}' WHERE field='botviews'");
 	}
@@ -143,8 +111,7 @@ function BuildHeader($params = 0)
 
 	$descr = '';
 
-	if (is_array($params))
-	{
+	if (is_array($params)) {
 		if ($params['title'])
 			$title = $params['title'].' | '.$title;
 
@@ -155,8 +122,7 @@ function BuildHeader($params = 0)
 	include('header.php');
 }
 
-function BuildFooter()
-{
+function BuildFooter() {
 	global $starttime, $nqueries, $nrowst, $nrowsf;
 
 	$t = gettimeofday();
@@ -166,12 +132,10 @@ function BuildFooter()
 	include('footer.php');
 }
 
-function BuildCrumbs($crumbs, $extra = NULL)
-{
+function BuildCrumbs($crumbs, $extra = NULL) {
 	$ret = '';
 
-	foreach ($crumbs as $link=>$text)
-	{
+	foreach ($crumbs as $link=>$text) {
 		if ($link == 'lol')
 			$ret .= $text.' &raquo; ';
 		else
@@ -179,8 +143,7 @@ function BuildCrumbs($crumbs, $extra = NULL)
 	}
 	$ret = substr($ret, 0, strlen($ret)-9);
 
-	if ($extra)
-	{
+	if ($extra) {
 		$ret .= ' <span style="float: right;">';
 
 		foreach ($extra as $link=>$text)
@@ -193,16 +156,14 @@ function BuildCrumbs($crumbs, $extra = NULL)
 	return "\t<table class=\"ptable\"><tr><td class=\"c2 left\">{$ret}</td></tr></table>\n";
 }
 
-function DateTime($time = NULL)
-{
+function DateTime($time = NULL) {
 	if ($time)
 		return gmdate('m/d/Y H:i:s', $time);
 	else
 		return gmdate('m/d/Y H:i:s');
 }
 
-function Message($msg, $title = 'Notice')
-{
+function Message($msg, $title = 'Notice') {
 	print
 "	<table class=\"ptable\">
 		<tr>
@@ -217,36 +178,30 @@ function Message($msg, $title = 'Notice')
 ";
 }
 
-function MsgError($msg)
-{
+function MsgError($msg) {
 	Message($msg, 'Error');
 }
 
-function Kill($msg)
-{
+function Kill($msg) {
 	BuildHeader(array('title' => 'Error'));
 	MsgError($msg);
 	BuildFooter();
 	die();
 }
 
-function Redirect($url, $msg)
-{
+function Redirect($url, $msg) {
 	return "You will now be redirected to <a href=\"{$url}\">{$msg}</a>.<META HTTP-EQUIV=\"REFRESH\" CONTENT=\"1;URL={$url}\">";
 }
 
-function Username($data, $pf = '')
-{
+function Username($data, $pf = '') {
 	return "<a href=\"profile.php?id={$data[$pf.'id']}\"><span class=\"uc_{$data[$pf.'powerlevel']}_{$data[$pf.'sex']}\">".htmlspecialchars($data[$pf.'name'])."</span></a>";
 }
 
-function PageNum()
-{
+function PageNum() {
 	return max((int)$_GET['p'], 1);
 }
 
-function PageLinks($num, $pp = 20)
-{
+function PageLinks($num, $pp = 20) {
 	$num = ceil($num / $pp);
 	if ($num < 2) return '';
 
@@ -255,8 +210,7 @@ function PageLinks($num, $pp = 20)
 
 	$ret = "<table class=\"ptable\"><tr><td class=\"c1 left\">Pages:";
 
-	for ($i = 1; $i <= $num; $i++)
-	{
+	for ($i = 1; $i <= $num; $i++) {
 		if ($i == $cur)
 			$ret .= " {$i}";
 		else
@@ -267,8 +221,7 @@ function PageLinks($num, $pp = 20)
 	return $ret;
 }
 
-function Filter_BBCode($text)
-{
+function Filter_BBCode($text) {
 	$text = preg_replace("@\[b\](.*?)\[/b\]@si", '<strong>$1</strong>', $text);
 	$text = preg_replace("@\[i\](.*?)\[/i\]@si", '<em>$1</em>', $text);
 	$text = preg_replace("@\[u\](.*?)\[/u\]@si", '<span style="text-decoration: underline;">$1</span>', $text);
@@ -281,8 +234,7 @@ function Filter_BBCode($text)
 	return $text;
 }
 
-function Filter_BlogEntry($text)
-{
+function Filter_BlogEntry($text) {
 	$text = nl2br($text, false);
 
 	$text = Filter_BBCode($text);
@@ -294,8 +246,7 @@ function Filter_BlogEntry($text)
 	return $text;
 }
 
-function Filter_BlogComment($text)
-{
+function Filter_BlogComment($text) {
 	$text = htmlspecialchars($text);
 	$text = nl2br($text, false);
 
@@ -303,5 +254,3 @@ function Filter_BlogComment($text)
 
 	return $text;
 }
-
-?>

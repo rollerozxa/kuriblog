@@ -1,17 +1,13 @@
 <?php
-
 require('lib/common.php');
 
 $id = (int)$_GET['id'];
 
-if ($_GET['action'] == 'delete')
-{
+if ($_GET['action'] == 'delete') {
 	if ($_GET['token'] !== $mytoken) Kill('No.');
 	$action = 'delete';
 	$actioncap = 'Delete';
-}
-else
-{
+} else {
 	$action = 'edit';
 	$actioncap = 'Edit';
 }
@@ -31,30 +27,24 @@ if (($mypower < 3) && ($entry['userid'] != $myuserid))
 
 $error = '';
 
-if ($_GET['action'] == 'delete')
-{
+if ($_GET['action'] == 'delete') {
 	SqlQuery("DELETE FROM blog_comments WHERE id={$id}");
 
 	SqlQuery("UPDATE blog_entries SET ncomments=ncomments-1, lastcmtid=(SELECT MAX(id) FROM blog_comments WHERE entryid={$comment['entryid']}) WHERE id={$comment['entryid']}");
 	SqlQuery("UPDATE blog_entries SET lastcmtuser=(SELECT userid FROM blog_comments WHERE id=lastcmtid) WHERE id={$comment['entryid']}");
 
 	die(header('Location: comments.php?id='.$comment['entryid']));
-}
-elseif ($_POST['submit'])
-{
+} elseif ($_POST['submit']) {
 	$text = trim(SqlEscape($_POST['text']));
 
 	if ($text == '')
 		$error = 'Your comment is empty. Enter some text and try again.';
-	else
-	{
+	else {
 		SqlQuery("UPDATE blog_comments SET text='{$text}' WHERE id={$id}");
 
 		die(header('Location: comments.php?id='.$comment['entryid'].'&cid='.$id));
 	}
-}
-else
-{
+} else {
 	$_POST['text'] = $comment['text'];
 }
 
@@ -82,5 +72,3 @@ if ($error)
 <?php
 
 BuildFooter();
-
-?>

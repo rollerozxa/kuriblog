@@ -1,5 +1,4 @@
 <?php
-
 require('lib/common.php');
 
 if (!$login)
@@ -8,15 +7,12 @@ if (!$login)
 if ($mypower < 0)
 	Kill('Banned users may not edit their profile.');
 
-if ($mypower >= 3 && isset($_GET['id']))
-{
+if ($mypower >= 3 && isset($_GET['id'])) {
 	$adminmode = true;
 	$userid = (int)$_GET['id'];
 	$user = SqlQueryFetchRow("SELECT * FROM users WHERE id={$userid}");
 	if (!$user) Kill('Invalid user ID.');
-}
-else
-{
+} else {
 	$adminmode = false;
 	$userid = $myuserid;
 	$user = $myuserdata;
@@ -27,56 +23,47 @@ else $action = 'Edit profile';
 
 $key = hash('sha256', "{$myuserdata['id']},{$myuserdata['password']},blahblah");
 $error = '';
-if ($_POST['savechanges'])
-{
+if ($_POST['savechanges']) {
 	if ($_POST['key'] != $key)
 		die('No.');
 
 	$newpass = '';
-	if ($_POST['changepass'] == 'on')
-	{
+	if ($_POST['changepass'] == 'on') {
 		if ($_POST['pass1'] != $_POST['pass2'])
 			$error = 'The passwords you entered don\'t match.';
 		else if ($userid == $myuserid)
 			$newpass = 'password=\''.hash('sha256', $_POST['pass1'].PASS_SALT).'\', ';
 	}
 
-	if (!$error)
-	{
+	if (!$error) {
 		$sex = (int)$_POST['sex'];
 		if ($sex<0 || $sex>2) $sex = 2;
 
 		$theme = (int)$_POST['theme'];
 
 		$adminopts = '';
-		if ($adminmode)
-		{
+		if ($adminmode) {
 			$username = trim($_POST['name']);
 			$powerlevel = (int)$_POST['powerlevel'];
 
 			$unmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE name='".SqlEscape($username)."' AND id!={$userid}");
 			if ($unmatches) $error = 'This username is already taken.';
-			else
-			{
+			else {
 				if ($powerlevel < -1 || $powerlevel > 3) $powerlevel = $user['powerlevel'];
 				$adminopts = ", name='".SqlEscape($username)."', powerlevel=".$powerlevel;
 			}
 		}
 	}
 
-	if (!$error)
-	{
+	if (!$error) {
 		SqlQuery("UPDATE users SET {$newpass}sex={$sex}, theme={$theme}{$adminopts} WHERE id={$userid}");
 
 		die(header('Location: profile.php?id='.$userid));
 	}
-}
-else
-{
+} else {
 	$_POST['sex'] = $user['sex'];
 
-	if ($adminmode)
-	{
+	if ($adminmode) {
 		$_POST['name'] = $user['name'];
 		$_POST['powerlevel'] = $user['powerlevel'];
 	}
@@ -92,8 +79,7 @@ if ($error)
 
 $themelist = '<select name="theme">';
 $themes = SqlQuery("SELECT t.*, (SELECT COUNT(*) FROM users WHERE theme=t.id) lovers FROM themes t ORDER BY id");
-while ($theme = SqlFetchRow($themes))
-{
+while ($theme = SqlFetchRow($themes)) {
 	$check = ($myuserdata['theme'] == $theme['id']) ? ' selected="selected"' : '';
 	$themelist .= "<option value=\"{$theme['id']}\"{$check}>{$theme['name']} ({$theme['lovers']})</option>";
 }
