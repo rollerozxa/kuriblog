@@ -44,7 +44,7 @@ if (isset($_POST['register'])) {
 BuildHeader(array('title' => 'Register'));
 
 $crumbs = BuildCrumbs(array('./'=>'Main', 'lol'=>'Register'));
-print $crumbs;
+echo $crumbs;
 
 if ($error)
 	MsgError($error);
@@ -94,6 +94,6 @@ $sex = (isset($_POST['sex']) ? $_POST['sex'] : 43);
 	</form>
 <?php
 
-print $crumbs;
+echo $crumbs;
 
 BuildFooter();

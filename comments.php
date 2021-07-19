@@ -55,7 +55,7 @@ $title = htmlspecialchars($entry['title']);
 BuildHeader(array('title' => $title));
 
 $crumbs = BuildCrumbs(array('./'=>'Main', 'lol'=>"{$title} &raquo; Comments"));
-print $crumbs;
+echo $crumbs;
 
 {
 	$userlink = UserName($entry, 'u');
@@ -69,7 +69,7 @@ print $crumbs;
 			onclick=\"if (!confirm('Really delete this blog entry?')) return false;\">Delete</a>";
 	}
 
-	print "
+	echo "
 	<table class=\"ptable\">
 		<tr>
 			<th class=\"left vtop\">
@@ -111,9 +111,9 @@ else if ($ncomments > 0)
 else
 	$ncmtstr = "No comments have been posted yet.";
 
-print "\t<table class=\"ptable\"><tr><td class=\"c1 left\">{$ncmtstr}</td></tr></table>\n";
+echo "\t<table class=\"ptable\"><tr><td class=\"c1 left\">{$ncmtstr}</td></tr></table>\n";
 
-print "\t".PageLinks($ncomments, $cpp);
+echo "\t".PageLinks($ncomments, $cpp);
 
 while ($comment = SqlFetchRow($comments)) {
 	if ($comment['userid'])
@@ -133,7 +133,7 @@ while ($comment = SqlFetchRow($comments)) {
 	if ($mypower >= 3)
 		$adminopts .= " | {$comment['ip']}";
 
-	print "
+	echo "
 	<table class=\"ptable\">
 		<tr>
 			<th class=\"left vtop\">
@@ -151,11 +151,11 @@ while ($comment = SqlFetchRow($comments)) {
 ";
 }
 
-print "\t".PageLinks($ncomments, $cpp);
+echo "\t".PageLinks($ncomments, $cpp);
 
 if ($login || GUESTCOMMENTS) {
 	if ($mypower < 0)
-		print "\t<table class=\"ptable\"><tr><td class=\"c1 left\">Banned users may not post comments.</td></tr></table>\n";
+		echo "\t<table class=\"ptable\"><tr><td class=\"c1 left\">Banned users may not post comments.</td></tr></table>\n";
 	else {
 		if ($error)
 			MsgError($error);
@@ -168,7 +168,7 @@ if ($login || GUESTCOMMENTS) {
 			<tr>
 				<td class="c2 left">
 					<?php if (!$login) { ?>
-					Name: <input type="text" name="name" value="<?php echo htmlspecialchars($_POST['name']); ?>" size="20" maxlength="20"><br>
+					Name: <input type="text" name="name" value="<?=htmlspecialchars($_POST['name']) ?>" size="20" maxlength="20"><br>
 					<?php } ?>
 					<textarea name="text" wrap="virtual" style="width: 100%; height: 200px;"></textarea>
 				</td>
@@ -182,8 +182,8 @@ if ($login || GUESTCOMMENTS) {
 	}
 }
 else
-	print "\t<table class=\"ptable\"><tr><td class=\"c1 left\"><a href=\"login.php\">Log in</a> to post a comment.</td></tr></table>\n";
+	echo "\t<table class=\"ptable\"><tr><td class=\"c1 left\"><a href=\"login.php\">Log in</a> to post a comment.</td></tr></table>\n";
 
-print $crumbs;
+echo $crumbs;
 
 BuildFooter();

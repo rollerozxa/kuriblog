@@ -159,7 +159,7 @@ function DateTime($time = NULL) {
 }
 
 function Message($msg, $title = 'Notice') {
-	print
+	echo
 "	<table class=\"ptable\">
 		<tr>
 			<th>{$title}</th>

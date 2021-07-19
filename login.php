@@ -25,7 +25,7 @@ if (isset($_GET['logout'])) {
 BuildHeader(array('title' => 'Log in'));
 
 $crumbs = BuildCrumbs(array('./'=>'Main', 'lol'=>'Log in'));
-print $crumbs;
+echo $crumbs;
 
 if ($error)
 	MsgError($error);
@@ -55,6 +55,6 @@ if ($error)
 	</form>
 <?php
 
-print $crumbs;
+echo $crumbs;
 
 BuildFooter();

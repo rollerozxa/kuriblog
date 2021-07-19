@@ -11,7 +11,7 @@ $ranks = array(-1 => 'Banned', 'Normal user', 'Comment moderator', 'Blog poster'
 BuildHeader(array('title' => 'Profile for '.htmlspecialchars($user['name'])));
 
 $crumbs = BuildCrumbs(array('./'=>'Main', 'lol'=>'Profile for '.htmlspecialchars($user['name'])));
-print $crumbs;
+echo $crumbs;
 
 ?>
 	<table class="ptable">
@@ -20,20 +20,20 @@ print $crumbs;
 		</tr>
 		<tr>
 			<td class="c1 center bold" style="width: 150px;">Registered on:</td>
-			<td class="c2 left"><?php print DateTime($user['regdate']); ?></td>
+			<td class="c2 left"><?=DateTime($user['regdate']) ?></td>
 		</tr>
 		<tr>
 			<td class="c1 center bold" style="width: 150px;">Rank:</td>
-			<td class="c2 left"><?php print $ranks[$user['powerlevel']]; ?></td>
+			<td class="c2 left"><?=$ranks[$user['powerlevel']] ?></td>
 		</tr>
 		<tr>
 			<td class="c1 center bold" style="width: 150px;">Theme:</td>
-			<td class="c2 left"><?php print htmlspecialchars($user['themename']); ?></td>
+			<td class="c2 left"><?=htmlspecialchars($user['themename']) ?></td>
 		</tr>
 		<?php if ($mypower >= 3) { ?>
 		<tr>
 			<td class="c1 center bold" style="width: 150px;">IP:</td>
-			<td class="c2 left"><?php echo $user['ip']; ?></td>
+			<td class="c2 left"><?=$user['ip'] ?></td>
 		</tr>
 		<?php } ?>
 	</table>
@@ -44,13 +44,13 @@ print $crumbs;
 		</tr>
 		<tr>
 			<td class="c2">
-				<a href="editprofile.php?id=<?php echo $id; ?>">Edit user</a>
+				<a href="editprofile.php?id=<?=$id ?>">Edit user</a>
 			</td>
 		</tr>
 	</table>
 	<?php } ?>
 <?php
 
-print $crumbs;
+echo $crumbs;
 
 BuildFooter();

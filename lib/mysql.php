@@ -14,9 +14,9 @@ function SqlQuery($query) {
 
 	$res = $dblink->query($query);
 	if (!$res) {
-		print "<strong>MySQL error</strong>: ".$dblink->error;
-		if ($sqldebug) print " @ ".$query;
-		print "<br>";
+		echo "<strong>MySQL error</strong>: ".$dblink->error;
+		if ($sqldebug) echo " @ ".$query;
+		echo "<br>";
 	} else {
 		$nqueries++;
 		$nrowst += @$res->num_rows;

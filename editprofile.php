@@ -72,7 +72,7 @@ if (isset($_POST['savechanges'])) {
 BuildHeader(array('title' => $action));
 
 $crumbs = BuildCrumbs(array('./'=>'Main', 'lol'=>$action));
-print $crumbs;
+echo $crumbs;
 
 if ($error)
 	MsgError($error);
@@ -109,9 +109,9 @@ $themelist .= '</select>';
 			<tr>
 				<td class="c1 center bold">Sex:</td>
 				<td class="c2 left">
-					<label><input type="radio" name="sex" value=1 <?php if ($_POST['sex']==1) print 'selected '; ?>/> Male</label>
-					<label><input type="radio" name="sex" value=2 <?php if ($_POST['sex']==2) print 'selected '; ?>/> Female</label>
-					<label><input type="radio" name="sex" value=0 <?php if ($_POST['sex']==0) print 'selected '; ?>/> N/A</label>
+					<label><input type="radio" name="sex" value=1 <?php if ($_POST['sex']==1) echo 'selected ' ?>/> Male</label>
+					<label><input type="radio" name="sex" value=2 <?php if ($_POST['sex']==2) echo 'selected ' ?>/> Female</label>
+					<label><input type="radio" name="sex" value=0 <?php if ($_POST['sex']==0) echo 'selected ' ?>/> N/A</label>
 				</td>
 			</tr>
 
@@ -121,7 +121,7 @@ $themelist .= '</select>';
 			<tr>
 				<td class="c1 center bold">Theme:</td>
 				<td class="c2 left">
-					<?php print $themelist; ?>
+					<?=$themelist ?>
 				</td>
 			</tr>
 
@@ -132,18 +132,18 @@ $themelist .= '</select>';
 			<tr>
 				<td class="c1 center bold">Username:</td>
 				<td class="c2 left">
-					<input type="text" name="name" size="20" maxlength="20" value="<?php echo htmlspecialchars($_POST['name']); ?>">
+					<input type="text" name="name" size="20" maxlength="20" value="<?=htmlspecialchars($_POST['name']) ?>">
 				</td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Rank:</td>
 				<td class="c2 left">
 					<select name="rank">
-						<option value="-1"<?php echo ($_POST['powerlevel'] == -1 ? ' selected':''); ?>>Banned</option>
-						<option value="0"<?php echo ($_POST['powerlevel'] == 0 ? ' selected':''); ?>>Normal user</option>
-						<option value="1"<?php echo ($_POST['powerlevel'] == 1 ? ' selected':''); ?>>Comments moderator</option>
-						<option value="2"<?php echo ($_POST['powerlevel'] == 2 ? ' selected':''); ?>>Blog poster</option>
-						<option value="3"<?php echo ($_POST['powerlevel'] == 3 ? ' selected':''); ?>>Admin</option>
+						<option value="-1"<?=($_POST['powerlevel'] == -1 ? ' selected':'') ?>>Banned</option>
+						<option value="0" <?=($_POST['powerlevel'] == 0 ? ' selected':'') ?>>Normal user</option>
+						<option value="1" <?=($_POST['powerlevel'] == 1 ? ' selected':'') ?>>Comments moderator</option>
+						<option value="2" <?=($_POST['powerlevel'] == 2 ? ' selected':'') ?>>Blog poster</option>
+						<option value="3" <?=($_POST['powerlevel'] == 3 ? ' selected':'') ?>>Admin</option>
 					</select>
 				</td>
 			</tr>
@@ -157,11 +157,11 @@ $themelist .= '</select>';
 				<td class="c2 left"><input type="submit" name="savechanges" value="Save changes"></td>
 			</tr>
 		</table>
-		<input type="hidden" name="key" value="<?php print $key; ?>">
+		<input type="hidden" name="key" value="<?=$key ?>">
 	</form>
 <?php
 
-print $crumbs;
+echo $crumbs;
 
 BuildFooter();
 

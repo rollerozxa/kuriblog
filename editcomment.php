@@ -57,11 +57,11 @@ if ($error)
 	<form action="" method="post">
 		<table class="ptable">
 			<tr>
-				<th colspan=2><?php print $actioncap; ?> comment</th>
+				<th colspan=2><?=$actioncap ?> comment</th>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Text:</td>
-				<td class="c2 left"><textarea name="text" style="width: 100%; height: 200px;"><?php print htmlspecialchars($_POST['text']); ?></textarea></td>
+				<td class="c2 left"><textarea name="text" style="width: 100%; height: 200px;"><?=htmlspecialchars($_POST['text']) ?></textarea></td>
 			</tr>
 			<tr>
 				<td class="c1">&nbsp;</td>

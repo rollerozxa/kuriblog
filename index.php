@@ -22,7 +22,7 @@ $entries = SqlQuery("	SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerle
 if (!$numentries)
 	Message('No blog entries posted.');
 else {
-	print "\t".PageLinks($numentries, $epp);
+	echo "\t".PageLinks($numentries, $epp);
 
 	while ($entry = SqlFetchRow($entries)) {
 		$title = htmlspecialchars($entry['title']);
@@ -54,7 +54,7 @@ else {
 		else
 			$cmtlink2 = "<a href=\"login.php\">Log in</a> to post a comment";
 
-		print
+		echo
 	"	<table class=\"ptable\">
 			<tr>
 				<th class=\"left vtop\">
@@ -77,7 +77,7 @@ else {
 	";
 	}
 
-	print "\t".PageLinks($numentries, $epp);
+	echo "\t".PageLinks($numentries, $epp);
 }
 
 BuildFooter();

@@ -5,15 +5,15 @@ require('lib/common.php');
 
 $siteurl = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['SERVER_NAME'].preg_replace('{/[^/]*$}', '', $_SERVER['SCRIPT_NAME']);
 
-print '<?xml version="1.0" encoding="UTF-8"?>';
+echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title><?php echo SITE_TITLE; ?> RSS</title>
-		<link><?php echo $siteurl; ?></link>
-		<description>The latest news on <?php echo SITE_TITLE; ?>.</description>
-		<atom:link href="<?php echo $siteurl; ?>/rss.php" rel="self" type="application/rss+xml" />
+		<title><?=SITE_TITLE ?> RSS</title>
+		<link><?=$siteurl ?></link>
+		<description>The latest news on <?=SITE_TITLE ?>.</description>
+		<atom:link href="<?=$siteurl ?>/rss.php" rel="self" type="application/rss+xml" />
 
 <?php
 	$entries = SqlQuery("SELECT be.*, u.name uname FROM blog_entries be LEFT JOIN users u ON u.id=be.userid ORDER BY date DESC LIMIT 10");
@@ -24,13 +24,13 @@ print '<?xml version="1.0" encoding="UTF-8"?>';
 		$text = Filter_BlogEntry($entry['text']);
 		$rfcdate = gmdate(DATE_RFC1123, $entry['date']);
 
-		print "\t\t<item>\n";
-		print "\t\t\t<title>{$title} (posted on {$timestamp} by {$username}</title>\n";
-		print "\t\t\t<link>{$siteurl}/?eid={$entry['id']}</link>\n";
-		print "\t\t\t<pubDate>{$rfcdate}</pubDate>\n";
-		print "\t\t\t<description><![CDATA[{$text}]]></description>\n";
-		print "\t\t\t<guid isPermaLink=\"false\">e{$entry['id']}</guid>\n";
-		print "\t\t</item>\n";
+		echo "\t\t<item>\n";
+		echo "\t\t\t<title>{$title} (posted on {$timestamp} by {$username}</title>\n";
+		echo "\t\t\t<link>{$siteurl}/?eid={$entry['id']}</link>\n";
+		echo "\t\t\t<pubDate>{$rfcdate}</pubDate>\n";
+		echo "\t\t\t<description><![CDATA[{$text}]]></description>\n";
+		echo "\t\t\t<guid isPermaLink=\"false\">e{$entry['id']}</guid>\n";
+		echo "\t\t</item>\n";
 	}
 ?>
 	</channel>

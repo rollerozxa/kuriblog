@@ -70,15 +70,15 @@ if ($error)
 	<form action="" method="post">
 		<table class="ptable">
 			<tr>
-				<th colspan=2><?php print $actioncap; ?> blog entry</th>
+				<th colspan=2><?=$actioncap ?> blog entry</th>
 			</tr>
 			<tr>
 				<td class="c1 center bold" style="width: 150px;">Title:</td>
-				<td class="c2 left"><input type="text" name="title" style="width: 100%;" maxlength=512 value="<?php print htmlspecialchars($_POST['title']); ?>"></td>
+				<td class="c2 left"><input type="text" name="title" style="width: 100%;" maxlength=512 value="<?=htmlspecialchars($_POST['title']) ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Text:</td>
-				<td class="c2 left"><textarea name="text" style="width: 100%; height: 200px;"><?php print htmlspecialchars($_POST['text']); ?></textarea></td>
+				<td class="c2 left"><textarea name="text" style="width: 100%; height: 200px;"><?=htmlspecialchars($_POST['text']) ?></textarea></td>
 			</tr>
 			<tr>
 				<td class="c1">&nbsp;</td>

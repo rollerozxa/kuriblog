@@ -15,7 +15,7 @@ function BuildAdminBar($page) {
 		$adminfuncs .= ($p==$page) ? $d : "<a href=\"{$p}.php\">{$d}</a>";
 	}
 
-	print
+	echo
 "	<table class=\"ptable\">
 		<tr>
 			<th>Admin functions</th>

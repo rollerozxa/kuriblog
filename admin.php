@@ -21,20 +21,20 @@ BuildAdminBar('admin');
 			</tr>
 			<tr>
 				<td class="c1 center bold" style="width: 150px;">Site name:</td>
-				<td class="c2 left"><input type="text" name="sitetitle" size=32 maxlength=200 value="<?php echo SITE_TITLE; ?>"></td>
+				<td class="c2 left"><input type="text" name="sitetitle" size=32 maxlength=200 value="<?=SITE_TITLE ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Meta description:</td>
-				<td class="c2 left"><input type="text" name="metadescr" size=32 maxlength=200 value="<?php echo META_DESCR; ?>"></td>
+				<td class="c2 left"><input type="text" name="metadescr" size=32 maxlength=200 value="<?=META_DESCR ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 center bold">Meta keywords:</td>
-				<td class="c2 left"><input type="text" name="metakeywords" size=32 maxlength=200 value="<?php echo META_KEYWORDS; ?>"></td>
+				<td class="c2 left"><input type="text" name="metakeywords" size=32 maxlength=200 value="<?=META_KEYWORDS ?>"></td>
 			</tr>
 			<tr>
 				<td class="c1 "></td>
 				<td class="c2 left">
-					<label><input type="checkbox" name="guestcomments" value=1 <?php echo GUESTCOMMENTS ? ' checked="checked"' : ''; ?>> Allow guests to post comments</label>
+					<label><input type="checkbox" name="guestcomments" value=1 <?=(GUESTCOMMENTS ? ' checked="checked"' : '') ?>> Allow guests to post comments</label>
 				</td>
 			</tr>
 			<tr>
