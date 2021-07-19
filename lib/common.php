@@ -1,11 +1,15 @@
 <?php
+if (!file_exists('conf/config.php')) {
+	die('<h2>Welcome to your soon-to-be Kuriblog!</h2><a href="install.php">Click here to be taken to the installation page.</a>');
+}
+
 $t = gettimeofday();
 $starttime = $t['sec'] + ($t['usec'] / 1000000);
 
 header('Content-type: text/html; CHARSET=utf-8');
 
-require('mysql.php');
-require('settings.php');
+require_once('conf/config.php');
+require_once('mysql.php');
 
 define('SITE_TITLE', htmlspecialchars(SqlQueryResult("SELECT value FROM misc WHERE field='sitename'")));
 define('META_DESCR', htmlspecialchars(SqlQueryResult("SELECT value FROM misc WHERE field='metadescr'")));

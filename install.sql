@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `blog_comments` (
   `ip` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `entryid` (`entryid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `blog_entries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -20,19 +20,19 @@ CREATE TABLE IF NOT EXISTS `blog_entries` (
   `lastcmtid` int(10) unsigned NOT NULL DEFAULT '0',
   `lastcmtuser` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `ipbans` (
   `ip` varchar(50) NOT NULL,
   `reason` varchar(200) NOT NULL,
   PRIMARY KEY (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `misc` (
   `field` varchar(32) NOT NULL,
   `value` varchar(1024) NOT NULL DEFAULT '',
   UNIQUE KEY `field` (`field`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `misc` (`field`, `value`) VALUES
 ('views', '0'),
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `themes` (
   `filename` varchar(32) NOT NULL,
   `name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `themes` (`id`, `filename`, `name`) VALUES
 (1, 'greennight', 'Green Night (Mega-Mario)');
@@ -62,4 +62,4 @@ CREATE TABLE IF NOT EXISTS `users` (
   `ip` varchar(50) NOT NULL,
   `theme` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;

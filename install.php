@@ -12,21 +12,15 @@ if ($_POST['install']) {
 	$salt = shake();
 
 	$settings = '<?php
-
 define(\'PASS_SALT\', '.var_export($salt, true).');
-';
-	file_put_contents('lib/settings.php', $settings);
-
-	$sqlparams = '<?php
 
 $sqlparams = array(	\'server\' => '.var_export($_POST['sqlserver'].':'.$_POST['sqlport'], true).',
 					\'username\' => '.var_export($_POST['sqlname'], true).',
 					\'password\' => '.var_export($_POST['sqlpass'], true).',
 					\'database\' => '.var_export($_POST['sqldb'], true).',
 					\'debug\' => 0);
-
-?>';
-	file_put_contents('lib/sqlparams.php', $sqlparams);
+';
+	file_put_contents('conf/config.php', $settings);
 
 	require('lib/mysql.php');
 

@@ -1,6 +1,5 @@
 <?php
-
-require('sqlparams.php');
+require_once('conf/config.php');
 $dblink = new mysqli($sqlparams['server'], $sqlparams['username'], $sqlparams['password'], $sqlparams['database'])
 	or die('Failed to connect to the MySQL server. Try again later.');
 $sqldebug = $sqlparams['debug'];
