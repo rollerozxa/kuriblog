@@ -1,65 +1,44 @@
 <?php
 require_once('conf/config.php');
-$dblink = new mysqli($sqlparams['server'], $sqlparams['username'], $sqlparams['password'], $sqlparams['database'])
-	or die('Failed to connect to the MySQL server. Try again later.');
-$sqldebug = $sqlparams['debug'];
-unset($sqlparams);
 
-$nqueries = 0;
-$nrowsf = 0;
-$nrowst = 0;
+$options = [
+	PDO::ATTR_ERRMODE				=> PDO::ERRMODE_EXCEPTION,
+	PDO::ATTR_DEFAULT_FETCH_MODE	=> PDO::FETCH_ASSOC,
+	PDO::ATTR_EMULATE_PREPARES		=> false,
+];
+try {
+	$sql = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, $options);
+} catch (\PDOException $e) {
+	die("Error - Can't connect to database. Please try again later.");
+}
 
-function SqlQuery($query) {
-	global $dblink, $nqueries, $nrowst, $sqldebug;
+function query($query,$params = []) {
+	global $sql;
 
-	$res = $dblink->query($query);
-	if (!$res) {
-		echo "<strong>MySQL error</strong>: ".$dblink->error;
-		if ($sqldebug) echo " @ ".$query;
-		echo "<br>";
-	} else {
-		$nqueries++;
-		$nrowst += @$res->num_rows;
-	}
-
+	$res = $sql->prepare($query);
+	$res->execute($params);
 	return $res;
 }
 
-function SqlFetchRow($res) {
-	global $nrowsf;
-
-	if (!$res) return NULL;
-	if ($res->num_rows <= 0) return NULL;
-
-	$ret = $res->fetch_assoc();
-	if ($ret)
-		$nrowsf++;
-
-	return $ret;
+function fetch($query,$params = []) {
+	$res = query($query,$params);
+	return $res->fetch();
 }
 
-function SqlQueryFetchRow($query) {
-	return SqlFetchRow(SqlQuery($query));
+function result($query,$params = []) {
+	$res = query($query,$params);
+	return $res->fetchColumn();
 }
 
-function SqlQueryResult($query, $col = 0) {
-	global $nrowsf;
-
-	$res = SqlQuery($query);
-	if (!$res) return NULL;
-	if ($res->num_rows <= 0) return NULL;
-
-	$nrowsf++;
-	$ceva = array_values($res->fetch_assoc());
-	$rasp = $ceva[$col];
-	return $rasp;
+function fetchArray($query) {
+	$out = [];
+	while ($record = $query->fetch()) {
+		$out[] = $record;
+	}
+	return $out;
 }
 
-function SqlNumRows($res) {
-	if (!$res) return 0;
-	return $res->num_rows;
+function insertId() {
+	global $sql;
+	return $sql->lastInsertId();
 }
-
-function SqlEscape($val) { global $dblink; return $dblink->real_escape_string($val); }
-
-function SqlInsertId() { global $dblink; return $dblink->insert_id; }

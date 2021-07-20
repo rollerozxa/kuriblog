@@ -11,7 +11,7 @@ if (isset($_GET['logout'])) {
 	if (!$_POST['username'] or !$_POST['password'])
 		$error = 'Please enter an user name and a password.';
 	else {
-		$logindata = SqlQueryResult("SELECT id,password,token FROM users WHERE name = '".SqlEscape($_POST['username']).'"');
+		$logindata = fetch("SELECT id,password,token FROM users WHERE name = ?", [$_POST['username']]);
 
 		if (!password_verify($_POST['password'], $logindata['password']))
 			$error = 'Invalid user name or password.';

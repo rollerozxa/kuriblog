@@ -10,7 +10,7 @@ if ($mypower < 0)
 if ($mypower >= 3 && isset($_GET['id'])) {
 	$adminmode = true;
 	$userid = (int)$_GET['id'];
-	$user = SqlQueryFetchRow("SELECT * FROM users WHERE id={$userid}");
+	$user = fetch("SELECT * FROM users WHERE id = ?", [$userid]);
 	if (!$user) Kill('Invalid user ID.');
 } else {
 	$adminmode = false;
@@ -32,7 +32,7 @@ if (isset($_POST['savechanges'])) {
 		if ($_POST['pass1'] != $_POST['pass2'])
 			$error = 'The passwords you entered don\'t match.';
 		else if ($userid == $myuserid)
-			$newpass = 'password=\''.hash('sha256', $_POST['pass1'].PASS_SALT).'\', ';
+			$newpass = 'password=\''.password_hash($_POST['pass1'], PASSWORD_DEFAULT).'\', ';
 	}
 
 	if (!$error) {
@@ -41,22 +41,28 @@ if (isset($_POST['savechanges'])) {
 
 		$theme = (int)$_POST['theme'];
 
+		$values = [$sex, $theme];
+
 		$adminopts = '';
 		if ($adminmode) {
 			$username = trim($_POST['name']);
 			$powerlevel = (int)$_POST['powerlevel'];
 
-			$unmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE name='".SqlEscape($username)."' AND id!={$userid}");
+			$unmatches = result("SELECT COUNT(*) FROM users WHERE name = ? AND id != ?", [$username, $userid]);
 			if ($unmatches) $error = 'This username is already taken.';
 			else {
 				if ($powerlevel < -1 || $powerlevel > 3) $powerlevel = $user['powerlevel'];
-				$adminopts = ", name='".SqlEscape($username)."', powerlevel=".$powerlevel;
+				$adminopts = ", name = ?, powerlevel = ?";
+				$values[] = $username;
+				$values[] = $powerlevel;
 			}
 		}
 	}
 
 	if (!$error) {
-		SqlQuery("UPDATE users SET {$newpass}sex={$sex}, theme={$theme}{$adminopts} WHERE id={$userid}");
+		$values[] = $userid;
+
+		query("UPDATE users SET {$newpass}sex = ?, theme = ? {$adminopts} WHERE id = ?", $values);
 
 		die(header('Location: profile.php?id='.$userid));
 	}
@@ -78,8 +84,8 @@ if ($error)
 	MsgError($error);
 
 $themelist = '<select name="theme">';
-$themes = SqlQuery("SELECT t.*, (SELECT COUNT(*) FROM users WHERE theme=t.id) lovers FROM themes t ORDER BY id");
-while ($theme = SqlFetchRow($themes)) {
+$themes = query("SELECT t.*, (SELECT COUNT(*) FROM users WHERE theme=t.id) lovers FROM themes t ORDER BY id");
+while ($theme = $themes->fetch()) {
 	$check = ($myuserdata['theme'] == $theme['id']) ? ' selected="selected"' : '';
 	$themelist .= "<option value=\"{$theme['id']}\"{$check}>{$theme['name']} ({$theme['lovers']})</option>";
 }

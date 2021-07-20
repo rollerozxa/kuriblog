@@ -2,7 +2,7 @@
 require('lib/common.php');
 
 $id = (int)$_GET['id'];
-$user = SqlQueryFetchRow("SELECT u.*, t.name themename FROM users u LEFT JOIN themes t ON t.id=u.theme WHERE u.id={$id}");
+$user = fetch("SELECT u.*, t.name themename FROM users u LEFT JOIN themes t ON t.id=u.theme WHERE u.id = ? ", [$id]);
 if (!$user)
 	Kill('Invalid user ID.');
 

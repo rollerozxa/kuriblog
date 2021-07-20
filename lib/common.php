@@ -11,12 +11,12 @@ header('Content-type: text/html; CHARSET=utf-8');
 require_once('conf/config.php');
 require_once('mysql.php');
 
-define('SITE_TITLE', htmlspecialchars(SqlQueryResult("SELECT value FROM misc WHERE field='sitename'")));
-define('META_DESCR', htmlspecialchars(SqlQueryResult("SELECT value FROM misc WHERE field='metadescr'")));
-define('META_KEYWORDS', htmlspecialchars(SqlQueryResult("SELECT value FROM misc WHERE field='metakeywords'")));
-define('GUESTCOMMENTS', SqlQueryResult("SELECT value FROM misc WHERE field='guestcomments'")?true:false);
+define('SITE_TITLE', htmlspecialchars(result("SELECT value FROM misc WHERE field='sitename'")));
+define('META_DESCR', htmlspecialchars(result("SELECT value FROM misc WHERE field='metadescr'")));
+define('META_KEYWORDS', htmlspecialchars(result("SELECT value FROM misc WHERE field='metakeywords'")));
+define('GUESTCOMMENTS', result("SELECT value FROM misc WHERE field='guestcomments'")?true:false);
 
-$ipban = SqlQueryFetchRow("SELECT * FROM ipbans WHERE INSTR('".SqlEscape($_SERVER['REMOTE_ADDR'])."', ip)=1");
+$ipban = fetch("SELECT * FROM ipbans WHERE INSTR(?, ip) = 1", [$_SERVER['REMOTE_ADDR']]);
 if ($ipban)
 	die("Your IP is banned. ".($ipban['reason'] ? 'Reason: '.$ipban['reason'] : ''));
 
@@ -44,7 +44,7 @@ $mypower = 0;
 $myuserdata = NULL;
 
 if (isset($_COOKIE['token']) && $token = $_COOKIE['token']) {
-	$myuserdata = SqlQueryFetchRow("SELECT * FROM users WHERE token='".SqlEscape($token)."'");
+	$myuserdata = fetch("SELECT * FROM users WHERE token = ?", [$token]);
 
 	if (!$myuserdata) {
 		setcookie('token');
@@ -55,7 +55,7 @@ if (isset($_COOKIE['token']) && $token = $_COOKIE['token']) {
 		$mypower = $myuserdata['powerlevel'];
 		$mytoken = sha1('wtf is this');
 
-		SqlQuery("UPDATE users SET ip='".SqlEscape($_SERVER['REMOTE_ADDR'])."' WHERE id={$myuserid}");
+		query("UPDATE users SET ip = ? WHERE id = ?", [$_SERVER['REMOTE_ADDR'], $myuserid]);
 	}
 }
 
@@ -82,19 +82,17 @@ function QueryString($exclude) {
 function BuildHeader($params = 0) {
 	global $login, $myuserdata, $mypower, $isbot;
 
-	$nviews = (int)SqlQueryResult("SELECT value FROM misc WHERE field='views'");
-	$nbotviews = (int)SqlQueryResult("SELECT value FROM misc WHERE field='botviews'");
 	if (!$isbot) {
-		$nviews++;
-		SqlQuery("UPDATE misc SET value='{$nviews}' WHERE field='views'");
+		query("UPDATE misc SET value = value + 1 WHERE field='views'");
 	} else {
-		$nbotviews++;
-		SqlQuery("UPDATE misc SET value='{$nbotviews}' WHERE field='botviews'");
+		query("UPDATE misc SET value = value + 1 WHERE field='botviews'");
 	}
+
+	$views = fetch("SELECT (SELECT value FROM misc WHERE field='views') views, (SELECT value FROM misc WHERE field='botviews') botviews");
 
 	$title = SITE_TITLE;
 
-	$themefile = SqlQueryResult("SELECT filename FROM themes WHERE id={$myuserdata['theme']}");
+	$themefile = result("SELECT filename FROM themes WHERE id = ?", [$myuserdata['theme']]);
 	if (file_exists("theme/{$themefile}/style.php"))
 		$themefile = "{$themefile}/style.php";
 	else
@@ -153,9 +151,9 @@ function BuildCrumbs($crumbs, $extra = NULL) {
 
 function DateTime($time = NULL) {
 	if ($time)
-		return gmdate('m/d/Y H:i:s', $time);
+		return gmdate('Y-m-d H:i', $time);
 	else
-		return gmdate('m/d/Y H:i:s');
+		return gmdate('Y-m-d H:i');
 }
 
 function Message($msg, $title = 'Notice') {

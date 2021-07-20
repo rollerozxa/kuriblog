@@ -16,8 +16,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 		<atom:link href="<?=$siteurl ?>/rss.php" rel="self" type="application/rss+xml" />
 
 <?php
-	$entries = SqlQuery("SELECT be.*, u.name uname FROM blog_entries be LEFT JOIN users u ON u.id=be.userid ORDER BY date DESC LIMIT 10");
-	while($entry = SqlFetchRow($entries)) {
+	$entries = query("SELECT be.*, u.name uname FROM blog_entries be LEFT JOIN users u ON u.id=be.userid ORDER BY date DESC LIMIT 10");
+	while($entry = $entries->fetch()) {
 		$title = htmlspecialchars($entry['title']);
 		$timestamp = DateTime($entry['date']);
 		$username = htmlspecialchars($entry['uname']);

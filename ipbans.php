@@ -2,16 +2,16 @@
 require('lib/admincommon.php');
 
 if (isset($_POST['add'])) {
-	$ip = SqlEscape($_POST['ip']);
-	$reason = SqlEscape($_POST['reason']);
+	$ip = $_POST['ip'];
+	$reason = $_POST['reason'];
 
-	if (!SqlQueryResult("SELECT COUNT(*) FROM ipbans WHERE ip='{$ip}'"))
-		SqlQuery("INSERT INTO ipbans (ip,reason) VALUES ('{$ip}','{$reason}')");
+	if (!result("SELECT COUNT(*) FROM ipbans WHERE ip = ?", [$ip]))
+		query("INSERT INTO ipbans (ip,reason) VALUES (?,?)", [$ip, $reason]);
 
 	die(header('Location: ipbans.php'));
 } else if (isset($_POST['remove'])) {
-	$ip = SqlEscape($_POST['ip']);
-	SqlQuery("DELETE FROM ipbans WHERE ip='{$ip}'");
+	$ip = $_POST['ip'];
+	query("DELETE FROM ipbans WHERE ip = ?", [$ip]);
 
 	die(header('Location: ipbans.php'));
 }
@@ -28,17 +28,20 @@ BuildAdminBar('ipbans');
 		</tr>
 <?php
 
-$ipbans = SqlQuery("SELECT * FROM ipbans");
-if (SqlNumRows($ipbans)) {
-	while ($ipban = SqlFetchRow($ipbans)) {
-		echo "
-		<tr>
-			<td class=\"c1 left\">{$ipban['ip']}</td>
-			<td class=\"c2 left\">{$ipban['reason']}</td>
-			<td class=\"c1 right\"><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"ip\" value=\"".htmlspecialchars($ipban['ip'])."\"><input type=\"submit\" name=\"remove\" value=\"Remove\"></form></td>
-		</tr>";
-	}
-} else
+$ipbans = query("SELECT * FROM ipbans");
+
+$i = 0;
+while ($ipban = $ipbans->fetch()) {
+	$i++;
+	echo "
+	<tr>
+		<td class=\"c1 left\">{$ipban['ip']}</td>
+		<td class=\"c2 left\">{$ipban['reason']}</td>
+		<td class=\"c1 right\"><form action=\"\" method=\"post\"><input type=\"hidden\" name=\"ip\" value=\"".htmlspecialchars($ipban['ip'])."\"><input type=\"submit\" name=\"remove\" value=\"Remove\"></form></td>
+	</tr>";
+}
+
+if ($i === 0)
 	echo "<tr><td class=\"c1\" colspan=\"3\">No IP bans.</td></tr>";
 
 ?>

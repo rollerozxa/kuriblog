@@ -25,7 +25,7 @@ if ($mypower < 2)
 	Kill('You aren\'t allowed to '.$action.' blog entries.');
 
 if (!$new) {
-	$entry = SqlQueryFetchRow("SELECT * FROM blog_entries WHERE id={$id}");
+	$entry = fetch("SELECT * FROM blog_entries WHERE id = ?", [$id]);
 	if (!$entry)
 		Kill('Invalid blog entry ID.');
 
@@ -37,12 +37,12 @@ if (!$new) {
 $error = '';
 
 if ($action == 'delete') {
-	SqlQuery("DELETE FROM blog_entries WHERE id={$id}");
-	SqlQuery("DELETE FROM blog_comments WHERE entryid={$id}");
+	query("DELETE FROM blog_entries WHERE id = ?", [$id]);
+	query("DELETE FROM blog_comments WHERE entryid = ?", [$id]);
 	die(header('Location: index.php'));
 } elseif (isset($_POST['submit']) && $_POST['submit']) {
-	$title = trim(SqlEscape($_POST['title']));
-	$text = trim(SqlEscape($_POST['text']));
+	$title = trim($_POST['title']);
+	$text = trim($_POST['text']);
 
 	if ($title == '')
 		$error = 'Your blog entry has no title. Enter a title and try again.';
@@ -50,9 +50,9 @@ if ($action == 'delete') {
 		$error = 'Your blog entry is empty. Enter some text and try again.';
 	else {
 		if ($new)
-			SqlQuery("INSERT INTO blog_entries (userid, title, text, date) VALUES ({$myuserid}, '{$title}', '{$text}', UNIX_TIMESTAMP())");
+			query("INSERT INTO blog_entries (userid, title, text, date) VALUES (?,?,?, UNIX_TIMESTAMP())", [$myuserid, $title, $text]);
 		else
-			SqlQuery("UPDATE blog_entries SET title='{$title}', text='{$text}' WHERE id={$id}");
+			query("UPDATE blog_entries SET title = ?, text = ? WHERE id = ?", [$title, $text, $id]);
 
 		die(header('Location: index.php'));
 	}

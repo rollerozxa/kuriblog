@@ -2,10 +2,8 @@
 require('lib/common.php');
 
 $entryid = (int)$_GET['id'];
-$entry = SqlQueryFetchRow("	SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel
-							FROM blog_entries be
-								LEFT JOIN users u ON u.id=be.userid
-							WHERE be.id={$entryid}");
+$entry = fetch("SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel FROM blog_entries be LEFT JOIN users u ON u.id=be.userid WHERE be.id = ?",
+	[$entryid]);
 
 if (!$entry)
 	Kill('Invalid blog entry ID.');
@@ -17,7 +15,7 @@ if (isset($_POST['postcomment'])) {
 			$error = 'You must be logged in to post comments.';
 		else if (!trim($_POST['name']))
 			$error = 'You must enter a name.';
-		else if (SqlQueryResult("SELECT COUNT(*) FROM users WHERE name='".SqlEscape(trim($_POST['name']))."'"))
+		else if (result("SELECT COUNT(*) FROM users WHERE name = ?", [$_POST['name']]))
 			$error = 'This name is already taken by a registered user.';
 	}
 
@@ -28,21 +26,23 @@ if (isset($_POST['postcomment'])) {
 			if ($mypower >= 3)
 				$lastcomments = 0;
 			else
-				$lastcomments = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE userid={$myuserid} AND date>=".(time()-86400));
+				$lastcomments = result("SELECT COUNT(*) FROM blog_comments WHERE userid = ? AND date >= ?", [$myuserid, (time()-86400)]);
 
 			if ($lastcomments >= 20)
 				$error = 'You posted enough comments for today. Come back tomorrow.';
 			else if (trim($_POST['text']) == '')
 				$error = 'Your comment is empty. Enter some text and try again.';
 			else {
-				$text = SqlEscape($_POST['text']);
+				$text = $_POST['text'];
 				$date = time();
 
 				if (!$login)
-					$guestname = SqlEscape(trim($_POST['name']));
+					$guestname = trim($_POST['name']);
 
-				SqlQuery("INSERT INTO blog_comments (entryid, userid, guestname, text, date, ip) VALUES ({$entryid}, {$myuserid}, '{$guestname}', '{$text}', {$date}, '".SqlEscape($_SERVER['REMOTE_ADDR'])."')");
-				SqlQuery("UPDATE blog_entries SET ncomments=ncomments+1, lastcmtid=LAST_INSERT_ID(), lastcmtuser={$myuserid} WHERE id={$entryid}");
+				query("INSERT INTO blog_comments (entryid, userid, guestname, text, date, ip) VALUES (?,?,?,?,?,?)",
+					[$entryid, $myuserid, $guestname, $text, $date, $_SERVER['REMOTE_ADDR']]);
+				query("UPDATE blog_entries SET ncomments = ncomments + 1, lastcmtid = LAST_INSERT_ID(), lastcmtuser = ? WHERE id = ?",
+					[$myuserid, $entryid]);
 			}
 		}
 	}
@@ -88,21 +88,21 @@ echo $crumbs;
 }
 
 $cpp = 20;
-$ncomments = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid}");
+$ncomments = result("SELECT COUNT(*) FROM blog_comments WHERE entryid = ?", [$entryid]);
 if (isset($_GET['last']))
 	$_GET['p'] = ceil($ncomments / $cpp);
 else if (isset($_GET['cid'])) {
 	$cid = (int)$_GET['cid'];
-	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_comments WHERE entryid={$entryid} AND id<={$cid}");
+	$numonpage = result("SELECT COUNT(*) FROM blog_comments WHERE entryid = ? AND id <= ?", [$entryid, $cid]);
 	$_GET['p'] = ceil($numonpage / $cpp);
 }
 
 $start = (PageNum() - 1) * $cpp;
-$comments = SqlQuery("	SELECT bc.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel
+$comments = query("	SELECT bc.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel
 						FROM blog_comments bc
 							LEFT JOIN users u ON u.id=bc.userid
-						WHERE bc.entryid={$entryid}
-						ORDER BY date LIMIT {$start},{$cpp}");
+						WHERE bc.entryid = ?
+						ORDER BY date LIMIT ?,?", [$entryid, $start, $cpp]);
 
 if ($ncomments > 1)
 	$ncmtstr = "{$ncomments} comments have been posted.";
@@ -115,7 +115,7 @@ echo "\t<table class=\"ptable\"><tr><td class=\"c1 left\">{$ncmtstr}</td></tr></
 
 echo "\t".PageLinks($ncomments, $cpp);
 
-while ($comment = SqlFetchRow($comments)) {
+while ($comment = $comments->fetch()) {
 	if ($comment['userid'])
 		$userlink = UserName($comment, 'u');
 	else

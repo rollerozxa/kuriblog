@@ -2,10 +2,10 @@
 require('lib/admincommon.php');
 
 if (isset($_POST['apply'])) {
-	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['sitetitle'])."' WHERE field='sitename'");
-	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['metadescr'])."' WHERE field='metadescr'");
-	SqlQuery("UPDATE misc SET value='".SqlEscape($_POST['metakeywords'])."' WHERE field='metakeywords'");
-	SqlQuery("UPDATE misc SET value='".($_POST['guestcomments'] ? 1:0)."' WHERE field='guestcomments'");
+	query("UPDATE misc SET value = ? WHERE field = 'sitename'", [$_POST['sitetitle']]);
+	query("UPDATE misc SET value = ? WHERE field = 'metadescr'", [$_POST['metadescr']]);
+	query("UPDATE misc SET value = ? WHERE field = 'metakeywords'", [$_POST['metakeywords']]);
+	query("UPDATE misc SET value = ? WHERE field = 'guestcomments'", [$_POST['guestcomments'] ? 1:0]);
 
 	die(header('Location: admin.php'));
 }

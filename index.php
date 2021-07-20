@@ -4,27 +4,27 @@ require('lib/common.php');
 BuildHeader(array('descr' => META_DESCR));
 
 $epp = 10;
-$numentries = SqlQueryResult("SELECT COUNT(*) FROM blog_entries");
+$numentries = result("SELECT COUNT(*) FROM blog_entries");
 if (isset($_GET['eid'])) {
 	$eid = (int)$_GET['eid'];
-	$numonpage = SqlQueryResult("SELECT COUNT(*) FROM blog_entries WHERE id>={$eid}");
+	$numonpage = result("SELECT COUNT(*) FROM blog_entries WHERE id >= {$eid}");
 	$_GET['p'] = ceil($numonpage / $epp);
 }
 
 $start = (PageNum() - 1) * $epp;
-$entries = SqlQuery("	SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel, u2.id u2id, u2.name u2name, u2.sex u2sex, u2.powerlevel u2powerlevel, c.guestname
+$entries = query("	SELECT be.*, u.id uid, u.name uname, u.sex usex, u.powerlevel upowerlevel, u2.id u2id, u2.name u2name, u2.sex u2sex, u2.powerlevel u2powerlevel, c.guestname
 						FROM blog_entries be
 							LEFT JOIN users u ON u.id=be.userid
 							LEFT JOIN users u2 ON u2.id=be.lastcmtuser
 							LEFT JOIN blog_comments c ON c.id=be.lastcmtid
-						ORDER BY date DESC LIMIT {$start},{$epp}");
+						ORDER BY date DESC LIMIT ?,?", [$start, $epp]);
 
 if (!$numentries)
 	Message('No blog entries posted.');
 else {
 	echo "\t".PageLinks($numentries, $epp);
 
-	while ($entry = SqlFetchRow($entries)) {
+	while ($entry = $entries->fetch()) {
 		$title = htmlspecialchars($entry['title']);
 		$userlink = UserName($entry, 'u');
 		$text = Filter_BlogEntry($entry['text']);

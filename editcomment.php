@@ -18,7 +18,7 @@ if (!$login)
 if ($mypower < 0)
 	Kill('You aren\'t allowed to '.$action.' comments.');
 
-$comment = SqlQueryFetchRow("SELECT * FROM blog_comments WHERE id={$id}");
+$comment = fetch("SELECT * FROM blog_comments WHERE id = ?");
 if (!$comment)
 	Kill('Invalid blog entry ID.');
 
@@ -28,19 +28,19 @@ if (($mypower < 3) && ($entry['userid'] != $myuserid))
 $error = '';
 
 if ($_GET['action'] == 'delete') {
-	SqlQuery("DELETE FROM blog_comments WHERE id={$id}");
+	query("DELETE FROM blog_comments WHERE id = ?", [$id]);
 
-	SqlQuery("UPDATE blog_entries SET ncomments=ncomments-1, lastcmtid=(SELECT MAX(id) FROM blog_comments WHERE entryid={$comment['entryid']}) WHERE id={$comment['entryid']}");
-	SqlQuery("UPDATE blog_entries SET lastcmtuser=(SELECT userid FROM blog_comments WHERE id=lastcmtid) WHERE id={$comment['entryid']}");
+	query("UPDATE blog_entries SET ncomments = ncomments - 1, lastcmtid = (SELECT MAX(id) FROM blog_comments WHERE entryid = ?) WHERE id = ?", [$comment['entryid'], $comment['entryid']]);
+	query("UPDATE blog_entries SET lastcmtuser = (SELECT userid FROM blog_comments WHERE id = lastcmtid) WHERE id = ?", [$comment['entryid']]);
 
 	die(header('Location: comments.php?id='.$comment['entryid']));
 } elseif ($_POST['submit']) {
-	$text = trim(SqlEscape($_POST['text']));
+	$text = trim($_POST['text']);
 
 	if ($text == '')
 		$error = 'Your comment is empty. Enter some text and try again.';
 	else {
-		SqlQuery("UPDATE blog_comments SET text='{$text}' WHERE id={$id}");
+		query("UPDATE blog_comments SET text = ? WHERE id = ?", [$text, $id]);
 
 		die(header('Location: comments.php?id='.$comment['entryid'].'&cid='.$id));
 	}

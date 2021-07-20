@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<td class="c2 center" style="width: 15%;">
-				<?=$nviews ?> views <!-- and <?=$nbotviews ?> by bots -->
+				<?=$views['views'] ?> views <!-- and <?=$views['botviews'] ?> by bots -->
 			</td>
 			<td class="c2 center">
 				<span style="float:right;"><a href="rss.php"><img src="img/rss.png" alt="RSS feed"></a></span>

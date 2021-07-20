@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<td class="c2 center" rowspan=2 style="width: 15%;">
-				<?=$nviews ?> views <!-- and <?=$nbotviews ?> by bots -->
+				<?=$views['views'] ?> views <!-- and <?=$views['botviews'] ?> by bots -->
 			</td>
 			<td class="c2 center">
 				<a href="./">Main</a>

@@ -14,26 +14,26 @@ if (isset($_POST['register'])) {
 	elseif (strlen($_POST['pass1']) < 6)
 		$error = 'The password you entered is too short to be secure. It should be atleast 6 characters.';
 	else {
-		$unmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE name='".SqlEscape($username)."'");
-		$ipmatches = SqlQueryResult("SELECT COUNT(*) FROM users WHERE ip='".SqlEscape($_SERVER['REMOTE_ADDR'])."'");
+		$unmatches = result("SELECT COUNT(*) FROM users WHERE name = ?", [$username]);
+		$ipmatches = result("SELECT COUNT(*) FROM users WHERE ip = ?", [$_SERVER['REMOTE_ADDR']]);
 
 		if ($unmatches)
 			$error = 'This username is already taken, please choose another.';
 		elseif ($ipmatches)
 			$error = 'Another user is using the same IP address as yours.';
 		else {
-			$username = SqlEscape($username);
+			$username = $username;
 			$password = password_hash($_POST['pass1'], PASSWORD_DEFAULT);
 			$sex = (int)$_POST['sex'];
 			if (($sex < 0) || ($sex > 2)) $sex = 2;
 
 			$power = 0;
-			if (SqlQueryResult("SELECT COUNT(*) FROM users") == 0) $power = 3;
+			if (result("SELECT COUNT(*) FROM users") == 0) $power = 3;
 
 			$token = bin2hex(random_bytes(32));
 
-			SqlQuery("INSERT INTO users (name,password,powerlevel,sex,regdate,ip,token) VALUES ('{$username}', '{$password}', {$power}, {$sex}, UNIX_TIMESTAMP(), '".SqlEscape($_SERVER['REMOTE_ADDR'])."', '{$token}')");
-			$user = SqlInsertId();
+			query("INSERT INTO users (name,password,powerlevel,sex,regdate,ip,token) VALUES (?,?,?,?,UNIX_TIMESTAMP(),?,?)",
+				[$username, $password, $power, $sex, $_SERVER['REMOTE_ADDR'], $token]);
 
 			setcookie('token', $token, time()+999999);
 			die(header('Location: index.php'));
