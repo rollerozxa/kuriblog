@@ -36,7 +36,7 @@ table.ptable th {
 table.ptable td {
 	border: 1px solid #208000;
 	margin: 0px;
-	padding: 1px;
+	padding: 4px;
 }
 
 table.ptable td.c1 {
